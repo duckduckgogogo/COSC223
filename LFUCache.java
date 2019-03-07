@@ -1,5 +1,3 @@
-//Key: RAM address
-//Value: frequency
 import java.util.HashMap;
 
 public class LFUCache implements CacheInterface {
@@ -30,10 +28,12 @@ public class LFUCache implements CacheInterface {
 
   //If input already in cache, increment hitrate and frequency
   //If input not already in cache, replace LFU with it
-  public void replace (int input) {
+  public void replace (int input, boolean keep) {
     if (checkPresence(input)) {
       cache.replace(input, cache.get(input)+1);
-      hitrate++;
+      if(keep){
+          hitrate++;
+      }
     }
     else {
       //Find LFU
@@ -61,7 +61,9 @@ public class LFUCache implements CacheInterface {
       if (checkPresence(sequence[sIndex])) {
         cache.replace(sequence[sIndex], cache.get(sequence[sIndex])+1);
         sIndex++;
-        hitrate++;
+        if (sIndex > 10000){
+          hitrate++;
+        }
       }
       else {
         cache.put(sequence[sIndex], 1);
@@ -71,7 +73,8 @@ public class LFUCache implements CacheInterface {
 
     //Rest of simulation
     for (int i = sIndex; i < sequenceSize; i++) {
-      replace (sequence[i]);
+      boolean keep = i > 10000;
+      replace (sequence[i], keep);
     }
     //System.out.println ("Hitrate: " + hitrate);
     return ((double)(hitrate))/((double)(sequenceSize));
