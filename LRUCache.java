@@ -28,11 +28,13 @@ public class LRUCache implements CacheInterface {
 
   //If input already in cache, move it to front
   //If input not already in cache, remove first element (LRU) and add input to end
-  public void replace (int input) {
+  public void replace (int input, boolean keep) {
     if (checkPresence(input)) {
       cache.removeFirstOccurrence(input);
       cache.add(input);
-      hitrate++;
+      if(keep){
+        hitrate++;
+      }
     }
     else {
       cache.remove();
@@ -51,7 +53,9 @@ public class LRUCache implements CacheInterface {
         cache.removeFirstOccurrence(sequence[sIndex]);
         cache.add(sequence[sIndex]);
         sIndex++;
-        hitrate++;
+        if (sIndex > 10000){
+          hitrate++;
+        }
       }
       else {
         cache.add(sequence[sIndex]);
@@ -61,7 +65,8 @@ public class LRUCache implements CacheInterface {
 
     //Rest of simulation
     for (int i = sIndex; i < sequenceSize; i++) {
-      replace (sequence[i]);
+      boolean keep = i > 10000;
+      replace (sequence[i], keep);
     }
     //System.out.println ("Hitrate: " + hitrate);
     return ((double)(hitrate))/((double)(sequenceSize));
