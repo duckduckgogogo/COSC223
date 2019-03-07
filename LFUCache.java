@@ -1,19 +1,12 @@
-import java.util.LinkedList;
-
-public class babyLFU {
-  public int value, frequency;
-  public babyLFU (int v) {
-    this.value = v;
-    this.frequency = 0;
-  }
-}
-
+//Key: RAM address
+//Value: frequency
+import java.util.HashMap;
 
 public class LFUCache implements CacheInterface {
 
   private int cacheSize, sequenceSize, hitrate;
   private int[] sequence;
-  private LinkedList<Integer> cache;
+  private HashMap<Integer, Integer> cache;
   //private static int hitrate;
 
   public LFUCache (int cacheSize, int[] sequence) {
@@ -21,7 +14,7 @@ public class LFUCache implements CacheInterface {
     this.sequence = sequence;
     this.sequenceSize = sequence.length;
     this.hitrate = 0;
-    this.cache = new LinkedList<Integer>();
+    this.cache = new HashMap<Integer, Integer>();
   }
 
   //Size < cacheSize --> returns false
@@ -32,20 +25,29 @@ public class LFUCache implements CacheInterface {
 
   //Input already in cache --> returns true
   public boolean checkPresence (int input) {
-    return cache.contains(input);
+    return cache.containsKey(input);
   }
 
-  //If input already in cache, move it to front
-  //If input not already in cache, remove first element (LRU) and add input to end
+  //If input already in cache, increment hitrate and frequency
+  //If input not already in cache, replace LFU with it
   public void replace (int input) {
     if (checkPresence(input)) {
-      cache.removeFirstOccurrence(input);
-      cache.add(input);
+      cache.replace(input, cache.get(input)+1);
       hitrate++;
     }
     else {
-      cache.remove();
-      cache.add(input);
+      //Find LFU
+      int lowestFreqKey = 0;
+      int lowestFreqVal = 0;
+      for (int key : cache.keySet()) {
+        if (cache.get(key) < lowestFreqVal) {
+          lowestFreqVal = cache.get(key);
+          lowestFreqKey = key;
+        }
+      }
+      //Replace
+      cache.remove(lowestFreqKey);
+      cache.put(input, 1);
     }
   }
 
@@ -57,13 +59,12 @@ public class LFUCache implements CacheInterface {
     int cIndex = 0;
     while (checkCacheFull() == false && (sIndex < sequenceSize)) {
       if (checkPresence(sequence[sIndex])) {
-        cache.removeFirstOccurrence(sequence[sIndex]);
-        cache.add(sequence[sIndex]);
+        cache.replace(sequence[sIndex], cache.get(sequence[sIndex])+1);
         sIndex++;
         hitrate++;
       }
       else {
-        cache.add(sequence[sIndex]);
+        cache.put(sequence[sIndex], 1);
         sIndex++;
       }
     }
