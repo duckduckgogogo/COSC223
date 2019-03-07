@@ -41,7 +41,7 @@ public class LRUCache implements CacheInterface {
   }
 
   //Returns hitrate of simulation
-  public int simulation () {
+  public double simulation () {
 
     //Initially fill cache
     int sIndex = 0;
@@ -63,8 +63,8 @@ public class LRUCache implements CacheInterface {
     for (int i = sIndex; i < sequenceSize; i++) {
       replace (sequence[i]);
     }
-    System.out.println ("Hitrate: " + hitrate);
-    return hitrate/sequenceSize;
+    //System.out.println ("Hitrate: " + hitrate);
+    return ((double)(hitrate))/((double)(sequenceSize));
   }
 
 
