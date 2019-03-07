@@ -6,7 +6,7 @@ public boolean checkPresence (int input);
 
 public void replace (int input);
 
-public int simulation ();
+public double simulation ();
 
 
 }
