@@ -28,8 +28,8 @@ public class RandomCache implements CacheInterface {
     return false;
   }
 
-  public void replace (int input) {
-    if (checkPresence(input)) {
+  public void replace (int input, boolean keep) {
+    if (checkPresence(input) && keep) {
       hitrate++;
     }
     else {
@@ -46,7 +46,9 @@ public class RandomCache implements CacheInterface {
     while (checkCacheFull() == false && (sIndex < sequenceSize)) {
       if (checkPresence(sequence[sIndex])) {
         sIndex++;
-        hitrate++;
+        if (sIndex > 10000){
+          hitrate++;
+        }
       }
       else {
         cache[cIndex] = sequence[sIndex];
@@ -57,7 +59,8 @@ public class RandomCache implements CacheInterface {
 
     //Rest of simulation
     for (int i = sIndex; i < sequenceSize; i++) {
-      replace (sequence[i]);
+      boolean keep = i > 10000;
+      replace (sequence[i], keep);
     }
 
     //System.out.println ("Hitrate: " + hitrate);
