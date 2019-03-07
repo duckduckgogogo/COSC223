@@ -1,7 +1,5 @@
 public interface CacheInterface {
 
-  public void replace(Integer toAdd);
-
 public boolean checkCacheFull ();
 
 public boolean checkPresence (int input);
