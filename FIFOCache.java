@@ -26,8 +26,8 @@ public class FIFOCache implements CacheInterface{
   }
 
   //If input not already in cache, remove first element and add input to end
-  public void replace (int input) {
-    if (checkPresence(input)) {
+  public void replace (int input, boolean keep) {
+    if (checkPresence(input) && keep) {
       hitrate++;
     }
     else {
@@ -45,7 +45,9 @@ public class FIFOCache implements CacheInterface{
     while (checkCacheFull() == false && (sIndex < sequenceSize)) {
       if (checkPresence(sequence[sIndex])) {
         sIndex++;
-        hitrate++;
+        if (sIndex > 10000){
+          hitrate++;
+        }
       }
       else {
         cache.add(sequence[sIndex]);
@@ -55,7 +57,8 @@ public class FIFOCache implements CacheInterface{
 
     //Rest of simulation
     for (int i = sIndex; i < sequenceSize; i++) {
-      replace (sequence[i]);
+      boolean keep = i > 10000;
+      replace (sequence[i], keep);
     }
     //System.out.println ("Hitrate: " + hitrate);
     return ((double)(hitrate))/((double)(sequenceSize));
