@@ -39,7 +39,12 @@ public class LFUCache implements CacheInterface {
       //Find LFU
       int lowestFreqKey = 0;
       int lowestFreqVal = 0;
+      int first = 0;
       for (int key : cache.keySet()) {
+        if (first == 0){
+          lowestFreqVal = cache.get(key);
+          first++;
+        }      
         if (cache.get(key) < lowestFreqVal) {
           lowestFreqVal = cache.get(key);
           lowestFreqKey = key;
