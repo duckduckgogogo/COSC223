@@ -52,5 +52,28 @@ public class ExperimentLFU {
     return hitRates;
   }
 
+  public double runGardForSize(int cacheSize) {
+    double sum = 0;
+    for (int i=0;i<100;i++){
+      GardnerDist dis = new GardnerDist(1000);
+      int[] requests = dis.generateGardner(length);
+      LFUCache cache = new LFUCache(cacheSize, requests);
+      double hitrate = cache.simulation();
+      sum += hitrate;
+    }
+    return sum/100;
+
+  }
+
+  public double[] runGardner(){
+    double[] hitRates = new double[191];
+    for(int i=10; i<201;i++){
+      double avgHitRate = runGardForSize(i);
+      hitRates[i-10] = avgHitRate;
+      System.out.println("done with size " + i);
+    }
+    return hitRates;
+  }
+
 
 }
