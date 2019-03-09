@@ -20,32 +20,22 @@ public class ZipfD{
     int array_length = 0;
     for (int i = 1; i<=ram_size;i++){
       double numorator = 1.0/i;
-      //System.out.println(numorator);
-      //stem.out.println((numorator/sum) * l);
       int numToEnter = (int)((numorator/sum) * l);
-      //System.out.println(numToEnter);
       probs[i-1] = numToEnter;
       array_length += numToEnter;
-      //System.out.println(numToEnter);
-
     }
-    System.out.println("done with probs ");
-    System.out.println("Array length " + array_length);
     
     //creating master list of indexes to pick from for distribution
     int[] toPickFrom = createToPickFrom(array_length, probs);
-    System.out.println("done with master list");
 
     //shuffle
     toPickFrom = shuffle(toPickFrom);
-    System.out.println("done with shuffling");
 
     //fill requests
     for(int i =0; i < l; i++){
       int index = gen.nextInt(array_length);
       requests[i] = toPickFrom[index];
     }
-    System.out.println("done with requests");
     return requests;
 
   }
