@@ -8,9 +8,9 @@ public class GardnerTest {
   public static void main(String args[]){
     GardnerTest test = new GardnerTest();
     try{
-      //test.random();
-      //test.FIFO();
-      //test.LRU();
+      test.random();
+      test.FIFO();
+      test.LRU();
       test.LFU();
     }
     catch (IOException i) {
